@@ -1,6 +1,7 @@
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
-import type { SubmitHandler } from "react-hook-form";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 
 interface Inputs  {
@@ -12,10 +13,30 @@ interface Inputs  {
 };
 
 const AdminDashboard: React.FC = () => {
-  const { register, handleSubmit, watch } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const { register, handleSubmit } = useForm<Inputs>();
 
-  console.log(watch("name"));
+ const mutation = useMutation({
+    mutationFn : async (menu)=>{
+      console.log(menu)
+      return await axios.post(`${import.meta.env.VITE_API_URL}/create-menu`, menu)
+    }
+  })
+
+const onSubmit = (menu:any)=>{
+  const data:any = {
+    name : menu.name,
+    price: menu.price,
+    quantity: menu.quantity,
+    description : menu.description,
+    // photo: menu.photo
+  }
+  mutation.mutate(data);
+}
+
+const onError = (errors:any) => {
+  console.error("error",JSON.stringify(errors, null, 2))
+
+}
   return (
     <main className="bg-[#ffffff] min-h-screen pr-8 pl-8 pb-8 pt-3  w-full">
       <div className="mb-8">
@@ -23,7 +44,7 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       <div className="bg-white rounded-2xl shadow-lg p-6 mb-10">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit, onError)}>
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold text-[#3D2C2E] mb-4">
               Create Menu Item
