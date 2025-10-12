@@ -4,7 +4,7 @@ import { Outlet } from 'react-router'
 
 const LayoutForAdmin = () => {
   return (
-    <div className='flex'>
+    <div className='flex bg-[#F9F5F0]'>
         <AdminSidebar/>
         <Outlet/>
     </div>

@@ -14,14 +14,13 @@ const AdminSidebar: React.FC = () => {
 
   return (
     <aside
-      className={`${
-        isOpen ? "w-64" : "w-20"
-      } bg-white text-[#3D2C2E] border-r border-gray-200 flex flex-col transition-all duration-300 min-h-screen shadow-md`}
+      className={`${isOpen ? "w-64" : "w-20"
+        } bg-[#F9F5F0]  text-[#3D2C2E] border-r border-gray-200 flex flex-col transition-all duration-300 min-h-screen shadow-md`}
     >
-  
-      <div className="flex items-center justify-between px-4 py-5 border-b border-gray-200">
+
+      <div className="flex items-center gap-5 px-4 py-5 border-b border-gray-200">
         <div className="flex items-center gap-2">
-          <FaHamburger className="text-[#E63946]" size={24} />
+          {isOpen && <FaHamburger className="text-[#F4991A]" size={24} />}
           {isOpen && <span className="font-bold text-lg">StreetBites</span>}
         </div>
         <button onClick={() => setIsOpen(!isOpen)} className="text-[#3D2C2E]">
@@ -31,7 +30,7 @@ const AdminSidebar: React.FC = () => {
 
       <nav className="flex flex-col gap-2 p-4 mt-4 font-medium flex-1">
         <a
-          href="#"
+          href="/admin"
           className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#FFF5E1] hover:text-[#E63946] transition"
         >
           <FaClipboardList />
@@ -39,7 +38,7 @@ const AdminSidebar: React.FC = () => {
         </a>
 
         <a
-          href="#"
+          href="/admin/menu"
           className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#FFF5E1] hover:text-[#E63946] transition"
         >
           <FaUtensils />
@@ -71,7 +70,7 @@ const AdminSidebar: React.FC = () => {
         </a>
       </nav>
 
-     
+
       <div className="p-4 border-t border-gray-200">
         <a
           href="#"
