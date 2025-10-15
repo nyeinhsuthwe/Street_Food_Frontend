@@ -80,7 +80,7 @@ const AdminMenu: React.FC = () => {
                                 <td className="p-3">
                                     {menu.photo ? (
                                         <img
-                                            src={menu.photo}
+                                            src={`${import.meta.env.VITE_API_URL}/uploads/${menu.photo}`}
                                             alt={menu.menu}
                                             className="w-16 h-16 object-cover rounded-lg border"
                                             style={{ borderColor: colors.card }}

@@ -10,19 +10,31 @@ const AdminDashboard: React.FC = () => {
   const { register, handleSubmit, reset } = useForm<Inputs>();
 
   const mutation = useMutation({
-    mutationFn: async (menu: Inputs) => {
-      console.log(menu);
-      return await axios.post(`${import.meta.env.VITE_API_URL}/create-menu`, menu);
-    },
-    onSuccess: (res) => {
-      
-      console.log("Menu created successfully", res.data);
-      reset();
-    },
-    onError: (err) => {
-      console.error("API error:", err.message);
-    },
-  });
+  mutationFn: async (menu: Inputs) => {
+    console.log(menu);
+    const formData = new FormData();
+    formData.append("menu", menu.menu);
+    formData.append("price", String(menu.price));
+    formData.append("quantity", String(menu.quantity));
+    formData.append("description", menu.description);
+
+    if (menu.photo && menu.photo[0]) {
+      formData.append("photo", menu.photo[0]);
+    }
+
+    return await axios.post(`${import.meta.env.VITE_API_URL}/create-menu`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
+  
+  onSuccess: (res) => {
+    console.log("Menu created successfully", res.data);
+    reset();
+  },
+  onError: (err) => {
+    console.error("API error:", err.message);
+  },
+});
 
   const onSubmit = (menu: Inputs) => {
     const data = {
