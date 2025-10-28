@@ -9,6 +9,7 @@ import { MdDelete } from "react-icons/md";
 const AdminMenu: React.FC = () => {
     const queryClient = useQueryClient();
 
+    //get menu list
     const { data, isLoading, isError, error } = useQuery({
         queryKey: ["menus"],
         queryFn: async () => {
@@ -18,18 +19,35 @@ const AdminMenu: React.FC = () => {
     });
     console.log("data", data)
 
-        const deleteMutation = useMutation({
+
+    //delete menu
+    const deleteMutation = useMutation({
         mutationFn: async (id: string) => {
             return await axios.delete(`${import.meta.env.VITE_API_URL}/delete-menu/${id}`)
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({queryKey: ["menus"]})
+            queryClient.invalidateQueries({ queryKey: ["menus"] })
         }
     })
 
     const handleDelete = (id: string) => {
         deleteMutation.mutate(id)
     }
+
+
+    //menu update
+    // const updateMutation = useMutation({
+    //     mutationFn : async ({id, data}:{id:string, data:Inputs})=>{
+    //         return await axios.put(`${import.meta.env.VITE_API_URL}/update-menu/${id}`)
+    //     }
+    // })
+
+    // const handleUpdate = ()=>{
+    //     const updateData = {
+            
+    //     }
+    // }
+
 
     if (isLoading)
         return <p className="text-center mt-10 text-lg" style={{ color: colors.text }}>Loading menus...</p>;
@@ -41,7 +59,7 @@ const AdminMenu: React.FC = () => {
         );
 
 
-    
+
 
     return (
         <div className="p-8 min-h-screen" style={{ backgroundColor: colors.bg }}>
