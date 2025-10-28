@@ -4,6 +4,7 @@ import LayoutForUser from "../layout/LayoutForUser";
 import Home from "../pages/User/Home";
 import AdminDashboard from "../pages/Admin/AdminDashboard";
 import AdminMenu from "../pages/Admin/AdminMenu";
+import CreateCategory from "../pages/Admin/CreateCategory";
 
 
 
@@ -19,6 +20,10 @@ const route = createBrowserRouter([
             {
                 path: "menu",
                 element : <AdminMenu/>
+            },
+            {
+                path : "create-category",
+                element : <CreateCategory/>
             }
         ]
     },
