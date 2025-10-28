@@ -38,6 +38,14 @@ const AdminSidebar: React.FC = () => {
         </a>
 
         <a
+          href="/admin/create-category"
+          className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#FFF5E1] hover:text-[#E63946] transition"
+        >
+          <FaClipboardList />
+          {isOpen && <span>Category</span>}
+        </a>
+
+        <a
           href="/admin/menu"
           className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#FFF5E1] hover:text-[#E63946] transition"
         >
