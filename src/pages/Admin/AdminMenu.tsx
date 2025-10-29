@@ -111,7 +111,7 @@ const AdminMenu: React.FC = () => {
             </tr>
           </thead>
 
-          <tbody style={{ backgroundColor: colors.bg }}>
+          <tbody style={{ backgroundColor: colors.bg }} >
             {filterMenu?.map((menu: Inputs) => (
               <tr
                 key={menu._id}
@@ -120,7 +120,7 @@ const AdminMenu: React.FC = () => {
                   borderBottom: `1px solid ${colors.card}`,
                 }}
               >
-                <td className="flex items-center justify-center m-1">
+                <td className="flex items-center justify-center my-3">
                   {menu.photo ? (
                     <img
                       src={`${import.meta.env.VITE_API_URL}/uploads/${
@@ -132,7 +132,7 @@ const AdminMenu: React.FC = () => {
                     />
                   ) : (
                     <div
-                      className="w-16 h-16 flex items-center justify-center rounded-lg text-sm italic"
+                      className="w-16 h-16 px-1 flex items-center justify-center text-center rounded-lg text-sm italic"
                       style={{
                         backgroundColor: colors.card,
                         color: colors.text,
@@ -152,7 +152,14 @@ const AdminMenu: React.FC = () => {
                   ${menu.price}
                 </td>
                 <td className="text-center" style={{ color: colors.text }}>
-                  {menu.description}
+                  {menu.description ? menu.description : (<div
+                      className="flex items-center justify-center text-sm italic"
+                      style={{
+                        color: colors.text,
+                      }}
+                    >
+                      No Description
+                    </div>)}
                 </td>
                 <td className="text-center">
                   <button
