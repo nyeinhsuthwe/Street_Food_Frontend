@@ -2,28 +2,16 @@ import React from "react";
 import { FaPlus } from "react-icons/fa";
 import { colors } from "../../constant/color";
 import Category from "../../components/Category";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { useApiMutation } from "../../hook/useMutation";
 import axios from "axios";
 
 const CreateCategory: React.FC = () => {
   const { register, handleSubmit, reset } = useForm<Categories>();
   const queryClient = useQueryClient();
 
-  const createMutation = useMutation({
-    mutationKey: ["categories"],
-    mutationFn: async (catagory: Categories) => {
-      const formData = new FormData();
-      formData.append("name", catagory.name);
-      if (catagory.photo && catagory.photo[0]) {
-        formData.append("photo", catagory.photo[0]);
-      }
-      return await axios.post(`${import.meta.env.VITE_API_URL}/create-category`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        })
-    },
+  const createMutation = useApiMutation({
      onSuccess: (res) => {
       queryClient.invalidateQueries({queryKey: ['categories']})  
       console.log("Menu created successfully", res.data);
@@ -34,16 +22,28 @@ const CreateCategory: React.FC = () => {
     },
   });
 
+  
+
   const onSubmit = (category : Categories) =>{
+    const formData = new FormData();
     const data = {
         name : category.name,
         photo : category.photo
     }
-    createMutation.mutate(data)
+      formData.append("name", data.name);
+      if (data.photo && data.photo[0]) {
+        formData.append("photo", data.photo[0]);
+      }
+    
+    createMutation.mutate({
+      endpoint : `${import.meta.env.VITE_API_URL}/create-category`,
+      method : "POST",
+      body : formData
+    })
   }
 
   return (
-    <div className="flex flex-col items-center w-full">
+    <div className="flex flex-col items-center w-full  ">
       <main
         className=" flex flex-col items-center px-6 py-10"
         style={{ backgroundColor: colors.bg }}
@@ -56,7 +56,7 @@ const CreateCategory: React.FC = () => {
         </h1>
 
         <section
-          className="w-full max-w-3xl shadow-lg rounded-2xl p-8 border mb-12"
+          className="w-full h-full max-w-3xl shadow-lg rounded-2xl p-8 border mb-12"
           style={{ backgroundColor: colors.card, borderColor: colors.bg }}
         >
           <form className="grid gap-6" onSubmit={handleSubmit(onSubmit)}>

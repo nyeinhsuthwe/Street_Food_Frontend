@@ -1,5 +1,5 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { useApiQuery } from "../../hook/useQuery";
+import { useApiMutation } from "../../hook/useMutation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FaPlus } from "react-icons/fa";
@@ -10,65 +10,60 @@ interface Category {
   name: string;
 }
 
-interface Inputs {
-  menu: string;
-  price: number;
-  quantity: number;
-  description: string;
-  category_id: string;
-  photo: FileList;
-}
-
 const AdminDashboard: React.FC = () => {
   const { register, handleSubmit, reset } = useForm<Inputs>();
 
-  const { data: categories } = useQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/get-category-list`);
-      return res.data.data; 
+  const { data: categories } = useApiQuery(
+    {
+      queryKey: ["categories"],
+      endpoint: `${import.meta.env.VITE_API_URL}/get-category-list`,
     },
-  });
+    {
+      select: (res: any) => res.data,
+    }
+  );
 
-  
-  const mutation = useMutation({
-    mutationFn: async (menu: Inputs) => {
-      const formData = new FormData();
-      formData.append("menu", menu.menu);
-      formData.append("price", String(menu.price));
-      formData.append("quantity", String(menu.quantity));
-      formData.append("description", menu.description);
-      formData.append("category_id", menu.category_id); 
-
-      if (menu.photo && menu.photo[0]) {
-        formData.append("photo", menu.photo[0]);
-      }
-
-      return await axios.post(`${import.meta.env.VITE_API_URL}/create-menu`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-    },
-
-    onSuccess: (res) => {
-      console.log("Menu created successfully", res.data);
-      reset();
-    },
-    onError: (err) => {
-      console.error("API error:", err);
-    },
-  });
+  const mutation = useApiMutation(
+    {
+      onSuccess: (res : any) => {
+        console.log("Menu created successfully", res);
+        reset(); 
+      },
+      onError: (err : any) => {
+        console.error("API error:", err);
+      },
+    }
+  );
 
   const onSubmit = (menu: Inputs) => {
-    mutation.mutate(menu);
+    const formData :any = new FormData();
+    formData.append("menu", menu.menu);
+    formData.append("price", String(menu.price));
+    formData.append("description", menu.description);
+    formData.append("category_id", menu.category_id);
+
+    if (menu.photo && menu.photo[0]) {
+      formData.append("photo", menu.photo[0]);
+    }
+    mutation.mutate({
+          
+      endpoint: `${import.meta.env.VITE_API_URL}/create-menu`,
+      method: "POST",
+      body: formData, 
+    
+    });
   };
 
   return (
     <main
-      className="min-h-screen mx-auto flex flex-col items-center px-6 py-10"
+      className="min-h-screen w-full mx-auto flex flex-col items-center px-6 py-10"
       style={{ backgroundColor: colors.bg }}
     >
       <div className="mb-10 text-center">
-        <h1 className="text-4xl font-extrabold" style={{ color: colors.accent }}>
+        <h1
+          className="text-4xl font-extrabold"
+          style={{ color: colors.accent }}
+        >
           🍔 Menu Management
         </h1>
         <p style={{ color: colors.text }} className="mt-2">
@@ -83,7 +78,10 @@ const AdminDashboard: React.FC = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div>
-              <h2 className="text-2xl font-semibold" style={{ color: colors.text }}>
+              <h2
+                className="text-2xl font-semibold"
+                style={{ color: colors.text }}
+              >
                 Create Menu Item
               </h2>
               <p className="text-sm mt-1" style={{ color: colors.text }}>
@@ -102,7 +100,10 @@ const AdminDashboard: React.FC = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Menu */}
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: colors.text }}>
+              <label
+                className="block text-sm font-medium mb-1"
+                style={{ color: colors.text }}
+              >
                 Menu
               </label>
               <input
@@ -116,7 +117,10 @@ const AdminDashboard: React.FC = () => {
 
             {/* Category Dropdown */}
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: colors.text }}>
+              <label
+                className="block text-sm font-medium mb-1"
+                style={{ color: colors.text }}
+              >
                 Category
               </label>
               <select
@@ -135,7 +139,10 @@ const AdminDashboard: React.FC = () => {
 
             {/* Price */}
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: colors.text }}>
+              <label
+                className="block text-sm font-medium mb-1"
+                style={{ color: colors.text }}
+              >
                 Price ($)
               </label>
               <input
@@ -149,7 +156,10 @@ const AdminDashboard: React.FC = () => {
 
             {/* Description */}
             <div className="lg:col-span-2">
-              <label className="block text-sm font-medium mb-1" style={{ color: colors.text }}>
+              <label
+                className="block text-sm font-medium mb-1"
+                style={{ color: colors.text }}
+              >
                 Description
               </label>
               <textarea
@@ -163,7 +173,10 @@ const AdminDashboard: React.FC = () => {
 
             {/* Upload Photo */}
             <div>
-              <label className="block text-sm font-medium mb-1" style={{ color: colors.text }}>
+              <label
+                className="block text-sm font-medium mb-1"
+                style={{ color: colors.text }}
+              >
                 Upload Photo
               </label>
               <input
