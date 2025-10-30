@@ -10,7 +10,10 @@ interface UpdateCategoryProps {
   onClose: () => void;
 }
 
-const UpdateCategoryForm: React.FC<UpdateCategoryProps> = ({ category, onClose }) => {
+const UpdateCategoryForm: React.FC<UpdateCategoryProps> = ({
+  category,
+  onClose,
+}) => {
   const { register, handleSubmit, setValue } = useForm<Categories>();
   const queryClient = useQueryClient();
 
@@ -39,7 +42,9 @@ const UpdateCategoryForm: React.FC<UpdateCategoryProps> = ({ category, onClose }
     }
 
     updateMutation.mutate({
-      endpoint: `${import.meta.env.VITE_API_URL}/update-category/${category._id}`,
+      endpoint: `${import.meta.env.VITE_API_URL}/update-category/${
+        category._id
+      }`,
       method: "PUT",
       body: formData,
     });
@@ -64,7 +69,10 @@ const UpdateCategoryForm: React.FC<UpdateCategoryProps> = ({ category, onClose }
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1" style={{ color: colors.text }}>
+            <label
+              className="block text-sm font-medium mb-1"
+              style={{ color: colors.text }}
+            >
               Category Name
             </label>
             <input
@@ -72,12 +80,19 @@ const UpdateCategoryForm: React.FC<UpdateCategoryProps> = ({ category, onClose }
               type="text"
               placeholder="Enter category name"
               className="w-full p-2 rounded border outline-none"
-              style={{ borderColor: colors.bg, backgroundColor: colors.bg, color: colors.text }}
+              style={{
+                borderColor: colors.bg,
+                backgroundColor: colors.bg,
+                color: colors.text,
+              }}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1" style={{ color: colors.text }}>
+            <label
+              className="block text-sm font-medium mb-1"
+              style={{ color: colors.text }}
+            >
               Upload Photo
             </label>
             <input
@@ -90,7 +105,7 @@ const UpdateCategoryForm: React.FC<UpdateCategoryProps> = ({ category, onClose }
                 }
               }}
               className="block w-full text-sm p-3 rounded"
-              style = {{backgroundColor: colors.accent}}
+              style={{ backgroundColor: colors.accent }}
             />
             {preview && (
               <img

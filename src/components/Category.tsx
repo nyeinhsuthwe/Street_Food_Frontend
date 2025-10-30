@@ -6,11 +6,12 @@ import { useApiMutation } from "../hook/useMutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import UpdateCategoryForm from "../pages/Admin/UpdateCategory";
+import { useNavigate } from "react-router-dom";
 
 const Category: React.FC = () => {
   const queryClient = useQueryClient();
   const [selectedCategory, setSelectedCategory] = useState<Categories | null>(null);
-
+  const navigate = useNavigate();
 
   const { data } = useApiQuery(
     {
@@ -46,6 +47,7 @@ const Category: React.FC = () => {
             {data?.map((category: Categories) => (
               <div
                 key={category._id}
+               
                 className="bg-white rounded-2xl shadow-lg overflow-hidden hover:scale-105 transition-transform relative group"
               >
                 <img
@@ -65,10 +67,11 @@ const Category: React.FC = () => {
                     className="border-[2.5px] border-gray-300 p-2 rounded text-red-500 cursor-pointer drop-shadow-lg hover:border-red-500 transition-transform hover:scale-110"
                   />
                 </div>
-                <div className="p-4 text-center">
+                <div className="p-4 text-center"  onClick={()=>navigate(`/admin/menu`, {state: {category : category.name, categoryId : category._id}})}>
                   <h3 className="font-bold text-lg" style={{ color: colors.text }}>
                     {category.name}
                   </h3>
+                   
                 </div>
               </div>
             ))}

@@ -1,6 +1,7 @@
 // src/components/Navbar.tsx
 import React from "react";
 import { FaHamburger, FaShoppingCart } from "react-icons/fa";
+import { NavLink } from "react-router";
 
 const Navbar: React.FC = () => {
   return (
@@ -13,8 +14,10 @@ const Navbar: React.FC = () => {
         </div>
 
         <ul className="hidden md:flex items-center gap-8 text-[#3D2C2E] font-medium">
-          <li className="hover:text-[#E63946] transition">Home</li>
-          <li className="hover:text-[#E63946] transition">Menu</li>
+          <NavLink to={'/user'}>  <li className="hover:text-[#E63946] transition">Home</li></NavLink>
+        
+          <NavLink to={'/user/menu'}> <li className="hover:text-[#E63946] transition">Menu</li></NavLink>
+         
           <li className="hover:text-[#E63946] transition">About</li>
           <li className="hover:text-[#E63946] transition">Contact</li>
         </ul>

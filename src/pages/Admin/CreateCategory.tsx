@@ -5,11 +5,12 @@ import Category from "../../components/Category";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useApiMutation } from "../../hook/useMutation";
-import axios from "axios";
+
 
 const CreateCategory: React.FC = () => {
   const { register, handleSubmit, reset } = useForm<Categories>();
   const queryClient = useQueryClient();
+ 
 
   const createMutation = useApiMutation({
      onSuccess: (res) => {

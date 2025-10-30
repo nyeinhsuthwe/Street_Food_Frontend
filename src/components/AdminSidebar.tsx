@@ -8,6 +8,8 @@ import {
   FaCog,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { BiSolidCategoryAlt } from "react-icons/bi";
+
 
 const AdminSidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -41,7 +43,7 @@ const AdminSidebar: React.FC = () => {
           href="/admin/create-category"
           className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#FFF5E1] hover:text-[#E63946] transition"
         >
-          <FaClipboardList />
+          <BiSolidCategoryAlt/>
           {isOpen && <span>Category</span>}
         </a>
 

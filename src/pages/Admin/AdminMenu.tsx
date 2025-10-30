@@ -5,10 +5,15 @@ import { FaRegEdit } from "react-icons/fa";
 import { useApiQuery } from "../../hook/useQuery";
 import { useApiMutation } from "../../hook/useMutation";
 import { MdDelete } from "react-icons/md";
+import { useLocation } from "react-router-dom";
 
 const AdminMenu: React.FC = () => {
   const queryClient = useQueryClient();
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const location = useLocation();
+  
+  const initialCategory = location.state?.categoryId || "All";
+  const [selectedCategory, setSelectedCategory] =
+    useState<string>(initialCategory);
 
   const {
     data: menus,
@@ -29,16 +34,14 @@ const AdminMenu: React.FC = () => {
   const deleteMutation = useApiMutation({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["menus"] });
-    }
-  })
+    },
+  });
 
   const handleDelete = (id: any) => {
-    deleteMutation.mutate(
-      {
-        endpoint: `${import.meta.env.VITE_API_URL}/delete-menu/${id}`,
-        method: "DELETE"
-      }
-    );
+    deleteMutation.mutate({
+      endpoint: `${import.meta.env.VITE_API_URL}/delete-menu/${id}`,
+      method: "DELETE",
+    });
   };
 
   const { data: categories } = useApiQuery(
@@ -65,9 +68,10 @@ const AdminMenu: React.FC = () => {
     );
 
   const filterMenu =
-    selectedCategory === "All"
-      ? menus
-      : menus?.filter((menu: Inputs) => menu.category_id == selectedCategory);
+  selectedCategory === "All"
+    ? menus
+    : menus?.filter((menu: Inputs) => menu.category_id === selectedCategory);
+
 
   return (
     <div
@@ -111,7 +115,7 @@ const AdminMenu: React.FC = () => {
             </tr>
           </thead>
 
-          <tbody style={{ backgroundColor: colors.bg }} >
+          <tbody style={{ backgroundColor: colors.bg }}>
             {filterMenu?.map((menu: Inputs) => (
               <tr
                 key={menu._id}
@@ -152,14 +156,18 @@ const AdminMenu: React.FC = () => {
                   ${menu.price}
                 </td>
                 <td className="text-center" style={{ color: colors.text }}>
-                  {menu.description ? menu.description : (<div
+                  {menu.description ? (
+                    menu.description
+                  ) : (
+                    <div
                       className="flex items-center justify-center text-sm italic"
                       style={{
                         color: colors.text,
                       }}
                     >
                       No Description
-                    </div>)}
+                    </div>
+                  )}
                 </td>
                 <td className="text-center">
                   <button
@@ -186,3 +194,4 @@ const AdminMenu: React.FC = () => {
 };
 
 export default AdminMenu;
+
