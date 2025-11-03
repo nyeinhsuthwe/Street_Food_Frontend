@@ -1,8 +1,9 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useApiMutation } from "../../hook/useMutation";
 import { colors } from "../../constant/color";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { hover } from "framer-motion";
 
 interface UpdateMenuFormProps {
   menu: Inputs;
@@ -70,7 +71,7 @@ const UpdateMenu: React.FC<UpdateMenuFormProps> = ({ menu, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-2xl w-[500px] relative">
+      <div className=" p-6 rounded-2xl w-[500px] relative" style={{background:colors.card}}>
         <h2 className="text-xl font-bold mb-4" style={{ color: colors.text }}>
           Update Menu
         </h2>
@@ -79,24 +80,25 @@ const UpdateMenu: React.FC<UpdateMenuFormProps> = ({ menu, onClose }) => {
             type="text"
             {...register("menu")}
             placeholder="Menu Name"
-            className="border p-2 rounded"
+            className="border p-2 border-gray-300 rounded bg-white"
           />
           <input
             type="number"
             {...register("price", { valueAsNumber: true })}
             placeholder="Price"
-            className="border p-2 rounded"
+            className="border p-2 border-gray-300 rounded bg-white"
           />
           <textarea
             {...register("description")}
             placeholder="Description"
-            className="border p-2 rounded"
+            className="border p-2 border-gray-300 rounded bg-white"
           />
           <input
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="border p-2 rounded"
+            className="border p-2 border-gray-300 rounded"
+            style={{ backgroundColor: colors.accent }}
           />
           <div className="flex justify-end gap-2 mt-2">
             <button
@@ -108,7 +110,8 @@ const UpdateMenu: React.FC<UpdateMenuFormProps> = ({ menu, onClose }) => {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600"
+              className="px-4 py-2 rounded text-white bg-[#344F1F] hover:bg-[#55753b]"
+              
             >
               Update
             </button>

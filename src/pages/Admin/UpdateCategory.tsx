@@ -118,7 +118,7 @@ const UpdateCategoryForm: React.FC<UpdateCategoryProps> = ({
 
           <button
             type="submit"
-            className="flex items-center justify-center gap-2 px-4 py-2 rounded shadow-md font-semibold bg-[#344F1F] hover:bg-[#55753b] text-white"
+            className=" flex items-center justify-center gap-2 px-4 py-2 rounded shadow-md font-semibold  bg-[#344F1F] hover:bg-[#55753b] text-white"
           >
             <FaSave /> Save Changes
           </button>

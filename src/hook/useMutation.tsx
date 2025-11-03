@@ -25,6 +25,7 @@ export function useApiMutation<TReq = any, TRes = any>(
         url: endpoint,
         method,
         data: body ?? undefined,
+        withCredentials: true,
       });
       return response.data;
     },

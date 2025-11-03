@@ -4,5 +4,6 @@ export const colors = {
   accent: "#F4991A",
   text: "#344F1F",
   white: "#FFFFFF",
-  hoverbtn : "#55753b"
+  hoverbtn : "#55753b",
+  green : "#344F1F"
 };

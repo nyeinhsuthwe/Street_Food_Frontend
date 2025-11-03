@@ -6,30 +6,42 @@ import { useApiQuery } from "../../hook/useQuery";
 import { useApiMutation } from "../../hook/useMutation";
 import { MdDelete } from "react-icons/md";
 import { useLocation } from "react-router-dom";
+import UpdateMenu from "./UpdateMenu";
 
 const AdminMenu: React.FC = () => {
   const queryClient = useQueryClient();
   const location = useLocation();
-  
+
   const initialCategory = location.state?.categoryId || "All";
   const [selectedCategory, setSelectedCategory] =
     useState<string>(initialCategory);
+  const [activeRow, setActiveRow] = useState<string | null>(null);
+  const [selectedMenu, setSelectedMenu] = useState<Inputs | null>(null);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(7);
 
   const {
-    data: menus,
+    data: menusData,
     isLoading,
     isError,
     error,
   } = useApiQuery(
     {
-      queryKey: ["menus"],
-      endpoint: `${import.meta.env.VITE_API_URL}/get-menu-list`,
+      queryKey: ["menus", selectedCategory, page],
+      endpoint: `${
+        import.meta.env.VITE_API_URL
+      }/get-menu-list?pageNo=${page}&pageSize=${limit}${
+        selectedCategory !== "All" ? `&category_id=${selectedCategory}` : ""
+      }`,
     },
     {
-      select: (res: any) => res.data,
+      select: (res: any) => res,
     }
   );
-  console.log("data", menus);
+
+  const menus = menusData?.data || [];
+  const totalPages = menusData?.totalPages || 1;
+  const currentPage = menusData?.currentPage || 1;
 
   const deleteMutation = useApiMutation({
     onSuccess: () => {
@@ -44,6 +56,10 @@ const AdminMenu: React.FC = () => {
     });
   };
 
+  const handleEdit = (menu: Inputs) => {
+    setSelectedMenu(menu);
+  };
+
   const { data: categories } = useApiQuery(
     {
       queryKey: ["categories"],
@@ -51,8 +67,6 @@ const AdminMenu: React.FC = () => {
     },
     { select: (res: any) => res.data }
   );
-
-  console.log("cat", categories);
 
   if (isLoading)
     return (
@@ -68,14 +82,13 @@ const AdminMenu: React.FC = () => {
     );
 
   const filterMenu =
-  selectedCategory === "All"
-    ? menus
-    : menus?.filter((menu: Inputs) => menu.category_id === selectedCategory);
-
+    selectedCategory === "All"
+      ? menus
+      : menus.filter((menu: Inputs) => menu.category_id === selectedCategory);
 
   return (
     <div
-      className="p-8 min-h-screen w-full"
+      className="p-8 min-h-screen w-full mt-10"
       style={{ backgroundColor: colors.bg }}
     >
       <div className="flex space-x-6 ml-[120px]">
@@ -100,7 +113,7 @@ const AdminMenu: React.FC = () => {
       </div>
       <div
         className="overflow-hidden shadow-md mt-4 rounded-2xl w-7xl mx-auto"
-        style={{ border: `1px solid ${colors.card}` }}
+        style={{ border: `1px solid ${colors.card}`, height: "680px" }}
       >
         <table className="w-full">
           <thead
@@ -119,32 +132,28 @@ const AdminMenu: React.FC = () => {
             {filterMenu?.map((menu: Inputs) => (
               <tr
                 key={menu._id}
-                className="transition-colors duration-200"
+                onClick={() => setActiveRow(menu._id ?? null)}
+                className={`transition-transform duration-200 ease-in-out cursor-pointer ${
+                  activeRow === menu._id
+                    ? "transform scale-105 shadow-sm"
+                    : "hover:scale-105 "
+                }`}
                 style={{
                   borderBottom: `1px solid ${colors.card}`,
                 }}
               >
-                <td className="flex items-center justify-center my-3">
-                  {menu.photo ? (
-                    <img
-                      src={`${import.meta.env.VITE_API_URL}/uploads/${
-                        menu.photo
-                      }`}
-                      alt={menu.menu}
-                      className="w-16 h-16 object-cover rounded-lg border"
-                      style={{ borderColor: colors.card }}
-                    />
-                  ) : (
-                    <div
-                      className="w-16 h-16 px-1 flex items-center justify-center text-center rounded-lg text-sm italic"
-                      style={{
-                        backgroundColor: colors.card,
-                        color: colors.text,
-                      }}
-                    >
-                      No Photo
-                    </div>
-                  )}
+                <td className="text-center py-3">
+                  <img
+                    src={
+                      menu.photo
+                        ? `${import.meta.env.VITE_API_URL}/uploads/${
+                            menu.photo
+                          }`
+                        : "/no-photo.png"
+                    }
+                    alt={menu.menu}
+                    className="w-16 h-16 object-cover rounded-lg mx-auto"
+                  />
                 </td>
                 <td
                   className="text-center font-medium"
@@ -156,32 +165,22 @@ const AdminMenu: React.FC = () => {
                   ${menu.price}
                 </td>
                 <td className="text-center" style={{ color: colors.text }}>
-                  {menu.description ? (
-                    menu.description
-                  ) : (
-                    <div
-                      className="flex items-center justify-center text-sm italic"
-                      style={{
-                        color: colors.text,
-                      }}
-                    >
-                      No Description
-                    </div>
-                  )}
+                  {menu.description || "-"}
                 </td>
                 <td className="text-center">
                   <button
-                    type="submit"
+                    type="button"
+                    onClick={() => handleEdit(menu)}
                     className="text-2xl mr-2 text-green-600"
                   >
                     <FaRegEdit />
                   </button>
                   <button
-                    onClick={() => handleDelete(menu._id ? menu._id : "")}
-                    type="submit"
+                    onClick={() => handleDelete(menu._id)}
+                    type="button"
                     className="text-2xl text-red-600"
                   >
-                    <MdDelete />{" "}
+                    <MdDelete />
                   </button>
                 </td>
               </tr>
@@ -189,9 +188,40 @@ const AdminMenu: React.FC = () => {
           </tbody>
         </table>
       </div>
+      <div className="flex justify-center items-center mt-6 gap-4">
+        <span className="font-medium text-gray-700">
+          Page {currentPage} of {totalPages}
+        </span>
+
+        <button
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+        >
+          Previous
+        </button>
+
+        <button
+          onClick={() =>
+            setPage((prev) => (prev < totalPages ? prev + 1 : prev))
+          }
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+      {selectedMenu && (
+        <UpdateMenu
+          menu={selectedMenu}
+          onClose={() => {
+            setSelectedMenu(null);
+            setActiveRow(null);
+          }}
+        />
+      )}
     </div>
   );
 };
 
 export default AdminMenu;
-
