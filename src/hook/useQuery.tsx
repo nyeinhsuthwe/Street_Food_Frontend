@@ -1,19 +1,28 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "../helpers/axios";
 
-interface queryPayload <T>{
-    endpoint : string,
-    queryKey : T,
-    params ?: T
+interface QueryPayload {
+  endpoint: string;
+  method?: "GET" | "POST"; // <-- Added
+  queryKey?: unknown[];
+  params?: Record<string, any>;
 }
 
-export function useApiQuery<TData = any> ({ endpoint, params, queryKey }: queryPayload<any>, options?: any, onSuccess?: any, p0?: () => void) {
-    return useQuery<TData>({
-        queryKey : queryKey ?? [endpoint, params],
-        queryFn : async ()=>{
-            const res = await axios.get(endpoint)
-            return res.data
-        },
-        ...options
-    })
+export function useApiQuery<TData = any>(
+  { endpoint, method = "GET", queryKey, params }: QueryPayload,
+  options?: any
+) {
+  return useQuery<TData>({
+    queryKey: queryKey ?? [endpoint, params],
+    queryFn: async () => {
+      if (method === "POST") {
+        const res = await axios.post(endpoint, params);
+        return res.data;
+      }
+
+      const res = await axios.get(endpoint, { params });
+      return res.data;
+    },
+    ...options,
+  });
 }

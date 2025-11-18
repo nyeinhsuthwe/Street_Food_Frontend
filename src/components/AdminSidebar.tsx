@@ -9,10 +9,17 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import { BiSolidCategoryAlt } from "react-icons/bi";
-
+import { useNavigate } from "react-router";
+import Cookies from "js-cookie";
 
 const AdminSidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    Cookies.remove("newToken")
+    navigate("/login", { replace: true });
+  }
 
   return (
     <aside
@@ -81,7 +88,7 @@ const AdminSidebar: React.FC = () => {
       </nav>
 
 
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-4 border-t border-gray-200" onClick={()=>handleLogout()}>
         <a
           href="#"
           className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-[#FFF5E1] hover:text-[#F4991A] transition"

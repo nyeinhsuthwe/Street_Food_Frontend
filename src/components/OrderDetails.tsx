@@ -45,10 +45,31 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, onClose }) => {
         <div className="fixed inset-0 flex justify-center items-center z-50 bg-orange/40 backdrop-blur-sm">
             <div className="rounded-3xl border border-green-500 p-6 w-11/12 md:w-3/4 lg:w-2/3 max-h-[80vh] overflow-y-auto shadow-2xl" style={{ backgroundColor: colors.bg }}>
 
-                <div className="flex justify-between items-center mb-6  pb-3">
+                <div className="flex flex-col justify-between  mb-6  pb-3">
                     <h3 className="text-2xl font-bold" style={{ color: colors.accent }}>
                         {order.user_id.name}'s Order
+
                     </h3>
+                   
+                    <div
+                        className="p-4 rounded-xl  flex flex-col items-start"
+                       
+                    >
+                        <p className="text-sm text-gray-600 font-bold mb-1">Contact Info</p>
+
+                      
+                        <p className="text-lg font-bold text-red-600">
+                            📞 {order.phone || "No phone number"}
+                        </p>
+
+                      
+                        {order.deliveryType === "delivery" && (
+                            <p className="text-lg font-bold text-purple-600 mt-1">
+                                🏠 {order.address || "No address provided"}
+                            </p>
+                        )}
+                    </div>
+
 
                 </div>
 
@@ -138,7 +159,10 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, onClose }) => {
                     >
                         <p className="text-sm text-gray-600 font-bold">Payment Method</p>
                         <p className="text-lg font-bold text-blue-500">{order.paymentMethod || "Mobile"}</p>
+
                     </div>
+
+
                 </div>
 
 

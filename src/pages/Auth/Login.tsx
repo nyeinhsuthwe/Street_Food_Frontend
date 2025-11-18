@@ -70,7 +70,7 @@ export const Login = () => {
             type="email"
             placeholder="Email"
             {...register("email", { required: "Email is required!" })}
-            className="w-full pl-10 p-3 border border-white rounded-xl focus:ring-2 focus:ring-white focus:outline-none text-white"
+            className="w-full pl-10 p-3 border-2  border-gray-100 rounded-xl focus:ring-1 focus:ring-white focus:outline-none text-white placeholder:text-white placeholder:font-semibold"
           />
         </div>
         {errors.email && (
@@ -87,7 +87,7 @@ export const Login = () => {
             type="password"
             placeholder="Password"
             {...register("password", { required: "Password is required!" })}
-            className="w-full pl-10 p-3 border border-white rounded-xl focus:ring-2 focus:ring-white focus:outline-none text-white"
+            className="w-full placeholder:text-white placeholder:font-semibold pl-10 p-3 border-2 border-gray-100 rounded-xl focus:ring-1 focus:ring-white focus:outline-none text-white"
           />
         </div>
         {errors.password && (

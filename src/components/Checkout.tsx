@@ -101,12 +101,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onClose }) => {
 
                     <div className="mb-5">
                         <h3 className="text-sm font-semibold mb-2">Contact Info</h3>
-                        <input
-                            type="text"
-                            placeholder="Full Name"
-                            {...register("fullname", { required: true })}
-                            className="w-full mb-3 border px-3 py-2 rounded-lg"
-                        />
+                        
                         <input
                             type="text"
                             placeholder="Phone Number"

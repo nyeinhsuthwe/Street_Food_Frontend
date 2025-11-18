@@ -1,16 +1,46 @@
 import React from "react";
-import {FaStar,} from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import { colors } from "../../constant/color";
+import { useApiQuery } from "../../hook/useQuery";
+import { useNavigate } from "react-router";
 
 const Home: React.FC = () => {
+  const navigate = useNavigate();
+
+  const { data: categories, isLoading } = useApiQuery<ApiResponse<Categories[]>>({
+    endpoint: `${import.meta.env.VITE_API_URL}/get-category-list`,
+   
+  });
+
+
+  const category = categories?.data || [];
+
+  const renderSkeleton = () => (
+    <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {Array.from({ length: 6 }).map((_, idx) => (
+        <div key={idx} className="rounded-2xl shadow-lg bg-white overflow-hidden animate-pulse">
+          <div className="w-full h-48 bg-gray-300"></div>
+          <div className="p-6 text-center space-y-3">
+            <div className="h-6 bg-gray-300 rounded w-3/4 mx-auto"></div>
+            <div className="flex justify-center gap-1">
+              {Array.from({ length: 5 }).map((_, starIdx) => (
+                <div key={starIdx} className="h-4 w-4 bg-gray-300 rounded-full"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
   return (
     <div
       className="min-h-screen font-sans bg-white"
       style={{ color: colors.text }}
     >
-      {/* Hero Section */}
+
       <section
-        className="relative h-[80vh] flex items-center justify-center bg-cover bg-center"
+        className="relative h-[73vh] flex items-center justify-center bg-cover bg-center"
         style={{
           backgroundImage:
             "url('https://images.unsplash.com/photo-1600891964599-f61ba0e24092')",
@@ -38,66 +68,49 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Popular Picks */}
-      <section className="mt-16 px-6 max-w-7xl mx-auto">
+
+      <section className="mt-10 mb-12 px-6 max-w-7xl mx-auto">
         <h2
           className="text-3xl font-bold text-center"
           style={{ color: colors.text }}
         >
-          Popular Picks
+          Categories
         </h2>
-        <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {/* Card */}
-          {[
-            {
-              img: "/img/cheesepizza.jpg",
-              title: "Cheesy Pizza",
-              desc: "Loaded with melting cheese & fresh toppings.",
-            },
-            {
-              img: "/img/chicken.jpg",
-              title: "Crispy Chicken",
-              desc: "Golden fried, juicy, and seasoned to perfection.",
-            },
-            {
-              img: "/img/corndog.jpg",
-              title: "Sweet Treats",
-              desc: "Cool off with creamy, delightful desserts.",
-            },
-          ].map((item, index) => (
-            <div
-              key={index}
-              className="rounded-2xl shadow-lg bg-white overflow-hidden hover:scale-105 transition"
-             
-            >
-              <img
-                src={item.img}
-                alt={item.title}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-6 text-center">
-                <h3 className="font-bold text-lg" style={{ color: colors.text }}>
-                  {item.title}
-                </h3>
-                <p className="text-sm mt-2" style={{ color: colors.text }}>
-                  {item.desc}
-                </p>
-                <div
-                  className="mt-3 flex items-center justify-center gap-1"
-                  style={{ color: colors.accent }}
-                >
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
+
+        {isLoading ? renderSkeleton() : (
+          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 " >
+            {category.map((c, index) => (
+              <div
+                key={index}
+                onClick={() => navigate(`/user/menu`, { state: { category: c.name, categoryId: c._id } })}
+                className="rounded-2xl shadow-lg bg-white overflow-hidden hover:scale-105 transition"
+              >
+                <img
+                  src={`${import.meta.env.VITE_API_URL}/uploads/${c.photo}`}
+                  alt={c.name}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="p-6 text-center">
+                  <h3 className="font-bold text-lg" style={{ color: colors.text }}>
+                    {c.name}
+                  </h3>
+
+                  <div
+                    className="mt-3 flex items-center justify-center gap-1"
+                    style={{ color: colors.accent }}
+                  >
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                    <FaStar />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
-
     </div>
   );
 };

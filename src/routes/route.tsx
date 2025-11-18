@@ -12,6 +12,7 @@ import { Register } from "../pages/Auth/Register";
 import { Order } from "../pages/Admin/Order";
 import CartPage from "../pages/User/Cart";
 import { PublicRoute } from "./PublicRoute";
+import History from "../pages/User/History";
 
 const route = createBrowserRouter([
   {
@@ -80,7 +81,10 @@ const route = createBrowserRouter([
       {
         path : "cart",
         element : <CartPage/>
-
+      },
+      {
+        path : "history",
+        element : <History/>
       }
     ],
   },
