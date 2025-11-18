@@ -13,15 +13,17 @@ const Category: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<Categories | null>(null);
   const navigate = useNavigate();
 
-  const { data } = useApiQuery(
-    {
-      queryKey: ["categories"],
-      endpoint: `${import.meta.env.VITE_API_URL}/get-category-list`,
-    },
-    {
-      select: (res: any) => res.data,
-    }
-  );
+  const { data } = useApiQuery<Categories[]>(
+  {
+    queryKey: ["categories"],
+    endpoint: `${import.meta.env.VITE_API_URL}/get-category-list`,
+  },
+  {
+    select: (res: ApiResponse<Categories[]>) => res.data,
+  }
+);
+
+
 
   const deleteMutation = useApiMutation({
     onSuccess: () => {
@@ -29,7 +31,7 @@ const Category: React.FC = () => {
     },
   });
 
-  const handleDelete = (id: any) => {
+  const handleDelete = (id: string) => {
     deleteMutation.mutate({
       endpoint: `${import.meta.env.VITE_API_URL}/delete-category/${id}`,
       method: "DELETE",
@@ -48,7 +50,7 @@ const Category: React.FC = () => {
               <div
                 key={category._id}
                
-                className="bg-white rounded-2xl shadow-lg overflow-hidden hover:scale-105 transition-transform relative group"
+                className="bg-amber-50 rounded-2xl shadow-lg overflow-hidden hover:scale-105 transition-transform relative group"
               >
                 <img
                   src={`${import.meta.env.VITE_API_URL}/uploads/${category.photo}`}
@@ -63,7 +65,7 @@ const Category: React.FC = () => {
                   />
                   <MdDelete
                     size={42}
-                    onClick={() => handleDelete(category._id)}
+                    onClick={() => handleDelete(category._id!)}
                     className="border-[2.5px] border-gray-300 p-2 rounded text-red-500 cursor-pointer drop-shadow-lg hover:border-red-500 transition-transform hover:scale-110"
                   />
                 </div>

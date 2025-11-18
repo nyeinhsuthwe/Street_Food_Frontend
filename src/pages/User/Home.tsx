@@ -1,17 +1,12 @@
 import React from "react";
-import {
-  FaStar,
-  FaFacebookF,
-  FaInstagram,
-  FaTwitter,
-} from "react-icons/fa";
+import {FaStar,} from "react-icons/fa";
 import { colors } from "../../constant/color";
 
 const Home: React.FC = () => {
   return (
     <div
-      className="min-h-screen font-sans"
-      style={{ backgroundColor: colors.bg, color: colors.text }}
+      className="min-h-screen font-sans bg-white"
+      style={{ color: colors.text }}
     >
       {/* Hero Section */}
       <section
@@ -72,8 +67,8 @@ const Home: React.FC = () => {
           ].map((item, index) => (
             <div
               key={index}
-              className="rounded-2xl shadow-lg overflow-hidden hover:scale-105 transition"
-              style={{ backgroundColor: colors.card }}
+              className="rounded-2xl shadow-lg bg-white overflow-hidden hover:scale-105 transition"
+             
             >
               <img
                 src={item.img}

@@ -1,5 +1,5 @@
 import { useMutation, type UseMutationOptions } from "@tanstack/react-query"
-import axios from "axios";
+import axios from "../helpers/axios";
 
 type HttpMethod = 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
@@ -16,7 +16,8 @@ interface MutationPayload<TReq> {
   method?: HttpMethod
   body?: TReq
 }
-export function useApiMutation<TReq = any, TRes = any>(
+
+export function useApiMutation<TReq = unknown, TRes = unknown>(
   options?: UseMutationOptions<ApiResponse<TRes>, Error, MutationPayload<TReq>>
 ) {
   return useMutation({

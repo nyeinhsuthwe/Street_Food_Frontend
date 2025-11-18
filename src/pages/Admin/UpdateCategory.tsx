@@ -24,7 +24,7 @@ const UpdateCategoryForm: React.FC<UpdateCategoryProps> = ({
       queryClient.invalidateQueries({ queryKey: ["categories"] });
       onClose();
     },
-    onError: (err: any) => {
+    onError: (err) => {
       console.error("Update failed:", err);
     },
   });
@@ -51,9 +51,9 @@ const UpdateCategoryForm: React.FC<UpdateCategoryProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-transparent z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-transparent z-50 backdrop-blur-sm">
       <div
-        className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md relative"
+        className="rounded-xl shadow-lg p-6 w-full max-w-md relative border-2 border-green-200"
         style={{ backgroundColor: colors.card }}
       >
         <button
@@ -63,7 +63,7 @@ const UpdateCategoryForm: React.FC<UpdateCategoryProps> = ({
           <FaTimes size={20} />
         </button>
 
-        <h2 className="text-2xl font-bold mb-4" style={{ color: colors.text }}>
+        <h2 className="text-2xl font-bold mb-4" style={{ color: colors.bg }}>
           Update Category
         </h2>
 
@@ -71,7 +71,7 @@ const UpdateCategoryForm: React.FC<UpdateCategoryProps> = ({
           <div>
             <label
               className="block text-sm font-medium mb-1"
-              style={{ color: colors.text }}
+              style={{ color: colors.bg }}
             >
               Category Name
             </label>
@@ -83,7 +83,7 @@ const UpdateCategoryForm: React.FC<UpdateCategoryProps> = ({
               style={{
                 borderColor: colors.bg,
                 backgroundColor: colors.bg,
-                color: colors.text,
+                color: colors.card
               }}
             />
           </div>
@@ -91,7 +91,7 @@ const UpdateCategoryForm: React.FC<UpdateCategoryProps> = ({
           <div>
             <label
               className="block text-sm font-medium mb-1"
-              style={{ color: colors.text }}
+              style={{ color: colors.bg }}
             >
               Upload Photo
             </label>
@@ -104,8 +104,8 @@ const UpdateCategoryForm: React.FC<UpdateCategoryProps> = ({
                   setPreview(URL.createObjectURL(e.target.files[0]));
                 }
               }}
-              className="block w-full text-sm p-3 rounded"
-              style={{ backgroundColor: colors.accent }}
+              className="block w-full text-sm p-3 rounded bg-amber-500 hover:bg-amber-600"
+             
             />
             {preview && (
               <img
@@ -118,7 +118,7 @@ const UpdateCategoryForm: React.FC<UpdateCategoryProps> = ({
 
           <button
             type="submit"
-            className=" flex items-center justify-center gap-2 px-4 py-2 rounded shadow-md font-semibold  bg-[#344F1F] hover:bg-[#55753b] text-white"
+            className=" flex items-center justify-center gap-2 px-4 py-2 rounded shadow-md font-semibold  bg-green-600 hover:bg-green-700 text-white"
           >
             <FaSave /> Save Changes
           </button>

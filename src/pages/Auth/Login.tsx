@@ -2,6 +2,7 @@ import { useApiMutation } from "../../hook/useMutation";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { AiOutlineMail, AiOutlineLock } from "react-icons/ai";
+import Cookies from "js-cookie";
 
 interface LoginFormInputs {
   email: string;
@@ -18,17 +19,19 @@ export const Login = () => {
 
   const loginMutation = useApiMutation({
     onSuccess: (res: any) => {
-      localStorage.setItem("token", res.token);
       localStorage.setItem("userRole", res.data.role);
-
+      localStorage.setItem("user_id",res.data._id);
+      Cookies.set("newToken", res.token)
       if (res.data.role === "admin") navigate("/admin");
       else navigate("/user");
+
     },
     onError: (err: any) => {
       alert(err.response?.data?.error || "Login failed!");
     },
   });
 
+  
   const onSubmit = (data: LoginFormInputs) => {
     loginMutation.mutate({
       endpoint: `${import.meta.env.VITE_API_URL}/login`,

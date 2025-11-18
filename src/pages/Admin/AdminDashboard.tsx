@@ -5,38 +5,34 @@ import { useForm } from "react-hook-form";
 import { FaPlus } from "react-icons/fa";
 import { colors } from "../../constant/color";
 
-interface Category {
-  _id: string;
-  name: string;
-}
 
 const AdminDashboard: React.FC = () => {
   const { register, handleSubmit, reset } = useForm<Inputs>();
 
-  const { data: categories } = useApiQuery(
+  const { data: categories } = useApiQuery<Categories[]>(
     {
       queryKey: ["categories"],
       endpoint: `${import.meta.env.VITE_API_URL}/get-category-list`,
     },
     {
-      select: (res: any) => res.data,
+      select: (res: ApiResponse<Categories[]>) => res.data,
     }
   );
 
-  const mutation = useApiMutation(
-    {
-      onSuccess: (res : any) => {
-        console.log("Menu created successfully", res);
-        reset(); 
-      },
-      onError: (err : any) => {
-        console.error("API error:", err);
-      },
-    }
-  );
+ 
+  const mutation = useApiMutation({
+    onSuccess: (res: unknown) => {
+      console.log("Menu created successfully", res);
+      reset();
+    },
+    onError: (err: unknown) => {
+      console.error("API error:", err);
+    },
+  });
+
 
   const onSubmit = (menu: Inputs) => {
-    const formData :any = new FormData();
+    const formData = new FormData();
     formData.append("menu", menu.menu);
     formData.append("price", String(menu.price));
     formData.append("description", menu.description);
@@ -45,12 +41,11 @@ const AdminDashboard: React.FC = () => {
     if (menu.photo && menu.photo[0]) {
       formData.append("photo", menu.photo[0]);
     }
+
     mutation.mutate({
-          
       endpoint: `${import.meta.env.VITE_API_URL}/create-menu`,
       method: "POST",
-      body: formData, 
-    
+      body: formData,
     });
   };
 
@@ -66,7 +61,7 @@ const AdminDashboard: React.FC = () => {
         >
           🍔 Menu Management
         </h1>
-        <p style={{ color: colors.text }} className="mt-2">
+        <p style={{ color: colors.card }} className="mt-2">
           Manage your street food menu with a warm vintage vibe
         </p>
       </div>
@@ -80,18 +75,18 @@ const AdminDashboard: React.FC = () => {
             <div>
               <h2
                 className="text-2xl font-semibold"
-                style={{ color: colors.text }}
+                style={{ color: colors.bg }}
               >
                 Create Menu Item
               </h2>
-              <p className="text-sm mt-1" style={{ color: colors.text }}>
+              <p className="text-sm mt-1" style={{ color: colors.accent }}>
                 Fill out the details to add a new menu item
               </p>
             </div>
             <button
               type="submit"
               className="flex items-center gap-2 mt-4 md:mt-0 font-semibold px-6 py-2.5 rounded-xl shadow-md transition-all duration-200 
-                bg-[#344F1F] hover:bg-[#55753b] text-white"
+               text-white hover:bg-amber-700 bg-amber-600"
             >
               <FaPlus /> Add Item
             </button>
@@ -102,13 +97,13 @@ const AdminDashboard: React.FC = () => {
             <div>
               <label
                 className="block text-sm font-medium mb-1"
-                style={{ color: colors.text }}
+                style={{ color: colors.bg }}
               >
                 Menu
               </label>
               <input
                 type="text"
-                {...register("menu")}
+                {...register("menu", { required: true })}
                 className="w-full p-3 border rounded-lg outline-none transition"
                 style={{ backgroundColor: colors.bg, borderColor: colors.bg }}
                 placeholder="Enter Menu"
@@ -119,17 +114,17 @@ const AdminDashboard: React.FC = () => {
             <div>
               <label
                 className="block text-sm font-medium mb-1"
-                style={{ color: colors.text }}
+                style={{ color: colors.bg }}
               >
                 Category
               </label>
               <select
-                {...register("category_id")}
+                {...register("category_id", { required: true })}
                 className="w-full p-3 border rounded-lg outline-none transition"
                 style={{ backgroundColor: colors.bg, borderColor: colors.bg }}
               >
                 <option value="">Select Category</option>
-                {categories?.map((cat: Category) => (
+                {categories?.map((cat) => (
                   <option key={cat._id} value={cat._id}>
                     {cat.name}
                   </option>
@@ -141,13 +136,13 @@ const AdminDashboard: React.FC = () => {
             <div>
               <label
                 className="block text-sm font-medium mb-1"
-                style={{ color: colors.text }}
+                style={{ color: colors.bg }}
               >
                 Price ($)
               </label>
               <input
                 type="number"
-                {...register("price")}
+                {...register("price", { required: true })}
                 className="w-full p-3 border rounded-lg outline-none transition"
                 style={{ backgroundColor: colors.bg, borderColor: colors.bg }}
                 placeholder="Enter Price"
@@ -158,12 +153,12 @@ const AdminDashboard: React.FC = () => {
             <div className="lg:col-span-2">
               <label
                 className="block text-sm font-medium mb-1"
-                style={{ color: colors.text }}
+                style={{ color: colors.bg }}
               >
                 Description
               </label>
               <textarea
-                {...register("description")}
+                {...register("description", { required: true })}
                 className="w-full p-3 border rounded-lg outline-none transition"
                 style={{ backgroundColor: colors.bg, borderColor: colors.bg }}
                 rows={3}
@@ -175,7 +170,7 @@ const AdminDashboard: React.FC = () => {
             <div>
               <label
                 className="block text-sm font-medium mb-1"
-                style={{ color: colors.text }}
+                style={{ color: colors.bg }}
               >
                 Upload Photo
               </label>
@@ -183,9 +178,9 @@ const AdminDashboard: React.FC = () => {
                 {...register("photo")}
                 type="file"
                 accept="image/*"
-                className="block bg-[#F9F5F0] w-full text-sm text-[#344F1F] file:mr-4 file:py-2 file:px-4 
+                className="block bg-[#F2EAD3] w-full text-sm text-[#344F1F] file:mr-4 file:py-2 file:px-4 
                   file:border-0 file:font-semibold 
-                  file:bg-[#344F1F] file:text-white hover:file:bg-[#55753b] transition"
+                  file:bg-amber-600 file:text-white hover:file:bg-amber-700 transition"
               />
             </div>
           </div>

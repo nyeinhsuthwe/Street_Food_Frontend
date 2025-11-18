@@ -3,7 +3,7 @@ import { useApiMutation } from "../../hook/useMutation";
 import { colors } from "../../constant/color";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { hover } from "framer-motion";
+
 
 interface UpdateMenuFormProps {
   menu: Inputs;
@@ -70,9 +70,9 @@ const UpdateMenu: React.FC<UpdateMenuFormProps> = ({ menu, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-      <div className=" p-6 rounded-2xl w-[500px] relative" style={{background:colors.card}}>
-        <h2 className="text-xl font-bold mb-4" style={{ color: colors.text }}>
+    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 backdrop-blur-sm">
+      <div className=" p-6 rounded-2xl w-[500px] border-2 border-green-200 relative" style={{background:colors.card}}>
+        <h2 className="text-xl font-bold mb-4" style={{ color: colors.bg }}>
           Update Menu
         </h2>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -80,25 +80,25 @@ const UpdateMenu: React.FC<UpdateMenuFormProps> = ({ menu, onClose }) => {
             type="text"
             {...register("menu")}
             placeholder="Menu Name"
-            className="border p-2 border-gray-300 rounded bg-white"
+            className=" p-2  rounded bg-amber-100" 
           />
           <input
             type="number"
             {...register("price", { valueAsNumber: true })}
             placeholder="Price"
-            className="border p-2 border-gray-300 rounded bg-white"
+            className=" p-2  rounded bg-amber-100" 
           />
           <textarea
             {...register("description")}
             placeholder="Description"
-            className="border p-2 border-gray-300 rounded bg-white"
+            className=" p-2  rounded bg-amber-100" 
           />
           <input
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="border p-2 border-gray-300 rounded"
-            style={{ backgroundColor: colors.accent }}
+            className=" p-2  rounded bg-green-500 hover:bg-green-600"
+            // style={{ backgroundColor: colors.accent }}
           />
           <div className="flex justify-end gap-2 mt-2">
             <button
@@ -110,7 +110,7 @@ const UpdateMenu: React.FC<UpdateMenuFormProps> = ({ menu, onClose }) => {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded text-white bg-[#344F1F] hover:bg-[#55753b]"
+              className="px-4 py-2 rounded text-black bg-amber-500 hover:bg-amber-600"
               
             >
               Update

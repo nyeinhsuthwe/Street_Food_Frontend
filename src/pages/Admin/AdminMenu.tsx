@@ -20,28 +20,24 @@ const AdminMenu: React.FC = () => {
   const [page, setPage] = useState(1);
   const [limit] = useState(7);
 
-  const {
-    data: menusData,
-    isLoading,
-    isError,
-    error,
-  } = useApiQuery(
-    {
-      queryKey: ["menus", selectedCategory, page],
-      endpoint: `${
-        import.meta.env.VITE_API_URL
-      }/get-menu-list?pageNo=${page}&pageSize=${limit}${
-        selectedCategory !== "All" ? `&category_id=${selectedCategory}` : ""
-      }`,
-    },
-    {
-      select: (res: any) => res,
-    }
-  );
+  const { data: menusData , isError, isLoading , error} = useApiQuery<ApiResponse<Inputs[]>>(
+  {
+    queryKey: ["menus", selectedCategory, page],
+    endpoint: `${
+      import.meta.env.VITE_API_URL
+    }/get-menu-list?pageNo=${page}&pageSize=${limit}${
+      selectedCategory !== "All" ? `&category_id=${selectedCategory}` : ""
+    }`,
+  },
+  {
+    select: (res: ApiResponse<Inputs[]>) => res, 
+  }
+);
 
-  const menus = menusData?.data || [];
-  const totalPages = menusData?.totalPages || 1;
-  const currentPage = menusData?.currentPage || 1;
+const menus = menusData?.data || [];
+const totalPages = menusData?.totalPages || 1;
+const currentPage = menusData?.currentPage || 1;
+
 
   const deleteMutation = useApiMutation({
     onSuccess: () => {
@@ -49,7 +45,7 @@ const AdminMenu: React.FC = () => {
     },
   });
 
-  const handleDelete = (id: any) => {
+  const handleDelete = (id: string) => {
     deleteMutation.mutate({
       endpoint: `${import.meta.env.VITE_API_URL}/delete-menu/${id}`,
       method: "DELETE",
@@ -65,15 +61,25 @@ const AdminMenu: React.FC = () => {
       queryKey: ["categories"],
       endpoint: `${import.meta.env.VITE_API_URL}/get-category-list`,
     },
-    { select: (res: any) => res.data }
+    { select: (res: ApiResponse<Categories[]>) => res.data
+}
   );
 
   if (isLoading)
-    return (
-      <p className="text-center mt-10 text-lg" style={{ color: colors.text }}>
+  return (
+    <div
+      className="flex justify-center items-center w-full h-full"
+      style={{ backgroundColor: colors.bg }}
+    >
+      <p
+        className="text-2xl md:text-3xl font-semibold px-6 py-4 rounded-xl shadow-md"
+        style={{ color: colors.card, backgroundColor: colors.accent }}
+      >
         Loading menus...
       </p>
-    );
+    </div>
+  );
+
   if (isError)
     return (
       <p className="text-center mt-10 text-red-600">
@@ -88,10 +94,10 @@ const AdminMenu: React.FC = () => {
 
   return (
     <div
-      className="p-8 min-h-screen w-full mt-10"
+      className="p-8 h-full pt-[100px] w-full "
       style={{ backgroundColor: colors.bg }}
     >
-      <div className="flex space-x-6 ml-[120px]">
+      <div className="flex space-x-6 w-7xl mx-auto">
         <h2
           className="text-3xl font-bold mb-3 flex items-center gap-2"
           style={{ color: colors.text }}
@@ -101,10 +107,10 @@ const AdminMenu: React.FC = () => {
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="border border-gray-300 rounded-lg px-4  text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+          className="border bg-green-800 border-gray-300 rounded-lg px-4  text-amber-100 focus:outline-none focus:ring-2 focus:ring-green-500"
         >
           <option value="All">All Categories</option>
-          {categories?.map((cat: any) => (
+          {categories?.map((cat: Categories) => (
             <option key={cat._id} value={cat._id}>
               {cat.name}
             </option>
@@ -112,8 +118,8 @@ const AdminMenu: React.FC = () => {
         </select>
       </div>
       <div
-        className="overflow-hidden shadow-md mt-4 rounded-2xl w-7xl mx-auto"
-        style={{ border: `1px solid ${colors.card}`, height: "680px" }}
+        className="overflow-hidden mt-4 rounded-2xl w-7xl mx-auto"
+        style={{  height: "677px" }}
       >
         <table className="w-full">
           <thead
@@ -128,18 +134,17 @@ const AdminMenu: React.FC = () => {
             </tr>
           </thead>
 
-          <tbody style={{ backgroundColor: colors.bg }}>
+          <tbody className="bg-amber-50">
             {filterMenu?.map((menu: Inputs) => (
               <tr
                 key={menu._id}
-                onClick={() => setActiveRow(menu._id ?? null)}
                 className={`transition-transform duration-200 ease-in-out cursor-pointer ${
                   activeRow === menu._id
                     ? "transform scale-105 shadow-sm"
                     : "hover:scale-105 "
                 }`}
                 style={{
-                  borderBottom: `1px solid ${colors.card}`,
+                  borderBottom: `2px solid ${colors.bg}`,
                 }}
               >
                 <td className="text-center py-3">
@@ -163,7 +168,7 @@ const AdminMenu: React.FC = () => {
                 </td>
                 <td className="text-center" style={{ color: colors.text }}>
                   ${menu.price}
-                </td>
+                </td>     
                 <td className="text-center" style={{ color: colors.text }}>
                   {menu.description || "-"}
                 </td>
@@ -176,7 +181,7 @@ const AdminMenu: React.FC = () => {
                     <FaRegEdit />
                   </button>
                   <button
-                    onClick={() => handleDelete(menu._id)}
+                    onClick={() => handleDelete(menu._id!)}
                     type="button"
                     className="text-2xl text-red-600"
                   >
@@ -196,7 +201,7 @@ const AdminMenu: React.FC = () => {
         <button
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
-          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+          className="px-4 py-2 bg-green-400 rounded hover:bg-green-500 disabled:opacity-50"
         >
           Previous
         </button>
@@ -206,7 +211,7 @@ const AdminMenu: React.FC = () => {
             setPage((prev) => (prev < totalPages ? prev + 1 : prev))
           }
           disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+          className="px-4 py-2 bg-green-400  rounded hover:bg-green-500 disabled:opacity-50"
         >
           Next
         </button>

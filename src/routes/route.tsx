@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import LayoutForAdmin from "../layout/LayoutForAdmin";
 import LayoutForUser from "../layout/LayoutForUser";
 import Home from "../pages/User/Home";
@@ -9,15 +9,30 @@ import { UserMenu } from "../pages/User/Menu";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { Login } from "../pages/Auth/Login";
 import { Register } from "../pages/Auth/Register";
+import { Order } from "../pages/Admin/Order";
+import CartPage from "../pages/User/Cart";
+import { PublicRoute } from "./PublicRoute";
 
 const route = createBrowserRouter([
   {
-    path : "/login",
-    element : <Login/>
+    path: "/",
+    element: <Navigate to="/login" replace />,
   },
   {
-    path : '/register',
-    element : <Register/>
+    path: "/login",
+    element: (
+      <PublicRoute>
+        <Login />
+      </PublicRoute>
+    ),
+  },
+  {
+    path: "/register",
+    element: (
+      <PublicRoute>
+        <Register />
+      </PublicRoute>
+    ),
   },
   {
     path: "/admin",
@@ -39,6 +54,10 @@ const route = createBrowserRouter([
         path: "create-category",
         element: <CreateCategory />,
       },
+      {
+        path : "order",
+        element : <Order/>
+      }
     ],
   },
 
@@ -58,6 +77,11 @@ const route = createBrowserRouter([
         path: "menu",
         element: <UserMenu />,
       },
+      {
+        path : "cart",
+        element : <CartPage/>
+
+      }
     ],
   },
 ]);

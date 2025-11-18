@@ -10,11 +10,11 @@ import { useApiMutation } from "../../hook/useMutation";
 const CreateCategory: React.FC = () => {
   const { register, handleSubmit, reset } = useForm<Categories>();
   const queryClient = useQueryClient();
- 
+
 
   const createMutation = useApiMutation({
-     onSuccess: (res) => {
-      queryClient.invalidateQueries({queryKey: ['categories']})  
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ['categories'] })
       console.log("Menu created successfully", res.data);
       reset();
     },
@@ -23,31 +23,31 @@ const CreateCategory: React.FC = () => {
     },
   });
 
-  
 
-  const onSubmit = (category : Categories) =>{
+
+  const onSubmit = (category: Categories) => {
     const formData = new FormData();
     const data = {
-        name : category.name,
-        photo : category.photo
+      name: category.name,
+      photo: category.photo
     }
-      formData.append("name", data.name);
-      if (data.photo && data.photo[0]) {
-        formData.append("photo", data.photo[0]);
-      }
-    
+    formData.append("name", data.name);
+    if (data.photo && data.photo[0]) {
+      formData.append("photo", data.photo[0]);
+    }
+
     createMutation.mutate({
-      endpoint : `${import.meta.env.VITE_API_URL}/create-category`,
-      method : "POST",
-      body : formData
+      endpoint: `${import.meta.env.VITE_API_URL}/create-category`,
+      method: "POST",
+      body: formData
     })
   }
 
   return (
-    <div className="flex flex-col items-center w-full  ">
+    <div className="flex flex-col items-center w-full  " style={{ backgroundColor: colors.bg }}>
       <main
         className=" flex flex-col items-center px-6 py-10"
-        style={{ backgroundColor: colors.bg }}
+
       >
         <h1
           className="text-4xl font-extrabold mb-6 text-center"
@@ -65,7 +65,7 @@ const CreateCategory: React.FC = () => {
               <div>
                 <label
                   className="block text-sm font-medium mb-1"
-                  style={{ color: colors.text }}
+                  style={{ color: colors.bg }}
                 >
                   Category Name
                 </label>
@@ -85,7 +85,7 @@ const CreateCategory: React.FC = () => {
               <div>
                 <label
                   className="block text-sm font-medium mb-1"
-                  style={{ color: colors.text }}
+                  style={{ color: colors.bg }}
                 >
                   Upload Photo
                 </label>
@@ -93,14 +93,16 @@ const CreateCategory: React.FC = () => {
                   {...register("photo")}
                   type="file"
                   accept="image/*"
-                  className="block w-full text-sm p-2 file:mr-4 file:py-2 file:px-4 file:border-0 file:font-semibold file:bg-[#344F1F] file:text-white hover:file:bg-[#55753b] transition"
+                  className="block  rounded bg-[#F2EAD3] w-full text-sm text-[#344F1F] file:mr-4 file:py-2 file:px-4 
+                                file:border-0 file:font-semibold 
+                                file:bg-amber-600 file:text-white hover:file:bg-amber-700 transition"
                 />
               </div>
             </div>
 
             <button
               type="submit"
-              className="flex  text-center gap-2 justify-center mt-3 px-6 py-3 rounded-xl shadow-md font-semibold transition bg-[#344F1F] hover:bg-[#55753b] text-white"
+              className="flex  text-center gap-2 justify-center mt-3 px-6 py-3 rounded-xl shadow-md font-semibold transition bg-green-600 hover:bg-green-700 text-white"
             >
               <FaPlus /> Add Category
             </button>

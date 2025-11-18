@@ -1,9 +1,9 @@
 export const colors = {
-  bg: "#F9F5F0",
-  card: "#F2EAD3",
-  accent: "#F4991A",
+  bg: "#F2EAD3",
+  accent: "#F4991A", //orange
   text: "#344F1F",
   white: "#FFFFFF",
   hoverbtn : "#55753b",
-  green : "#344F1F"
+  card : "#344F1F", //green
+  egg : "#F8F4E6"
 };
